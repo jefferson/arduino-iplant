@@ -36,17 +36,12 @@ void loop() {
   
   float UmidadePercentual;
   
-  ValorADC = analogRead(0);   //978 -> 3,3V
-  
-  //Serial.print("[Leitura ADC] ");
-  //Serial.println(ValorADC);
+  ValorADC = analogRead(0);
 
   UmidadePercentual = 100 * ((1024-(float)ValorADC) / 1024);
-  //Serial.print("[Umidade Percentual] ");
-  //Serial.print(UmidadePercentual);
-  //Serial.println("%");
 
-  Firebase.setFloat("planta/MxjCfjOkT1a2ACZTGRVGKHIbwgF2/humidity", UmidadePercentual);
+  Firebase.setFloat("planta/quintal-code/humidity", UmidadePercentual);
+  
   // handle error
   if (Firebase.failed()) {
       Serial.print("setting /message failed:");
@@ -54,7 +49,7 @@ void loop() {
       return;
   }
 
-  bool open_tap = Firebase.getBool("planta/MxjCfjOkT1a2ACZTGRVGKHIbwgF2/open_tap");
+  bool open_tap = Firebase.getBool("planta/quintal-code/open_tap");
 
   // handle error
   if (Firebase.failed()) {
@@ -64,18 +59,15 @@ void loop() {
   }
   
   if(!open_tap)
-  {
-    Serial.print("ligando rele: " + String(open_tap) + "\n ");
+  {  
     digitalWrite(relayPin, HIGH); //liga
   }
   else
   {
-    Serial.print("desligando rele: " + String(open_tap) + "\n ");
     digitalWrite(relayPin, LOW); //desliga
   }
  
   delay(5000);
-  
   
 }
 
